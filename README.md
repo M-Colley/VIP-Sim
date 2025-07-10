@@ -1,13 +1,9 @@
-# VIP-Sim
-VIP-Sim: A User-Centered Approach to Vision Impairment Simulation for Accessible Design
+# VIP-Sim: A User-Centered Approach to Vision Impairment Simulation for Accessible Design
 <!-- GitHub Topics: accessibility, visual-impairment, unity, simulation, hci, user-centered-design -->
+> A gaze-contingent vision impairment simulator to support accessible design.
 
-# 🎩 VIP‑Sim
-
-> A user-centered, gaze-contingent vision impairment simulator to support accessible design.
-
-![License](https://img.shields.io/github/license/YOUR_USERNAME/vip-sim)
-![Release](https://img.shields.io/github/v/release/YOUR_USERNAME/vip-sim)
+![License](https://img.shields.io/github/license/Max-Raed/vip-sim)
+![Release](https://img.shields.io/github/v/release/Max-Raed/vip-sim)
 ![Made with Unity](https://img.shields.io/badge/made%20with-Unity-000?logo=unity)
 
 <p align="center">
