@@ -6,6 +6,8 @@
 ![Release](https://img.shields.io/github/v/release/Max-Raed/vip-sim)
 ![Made with Unity](https://img.shields.io/badge/made%20with-Unity-000?logo=unity)
 
+[Max Rädler](https://scholar.google.de/citations?user=HmSPxPsAAAAJ&hl=de&oi=ao), [Mark Colley](https://scholar.google.de/citations?user=Kt5I7wYAAAAJ&hl=de&oi=ao), and [Enrico Rukzio](https://scholar.google.de/citations?user=LEu4D5gAAAAJ&hl=de&oi=ao)
+
 <p align="center">
   <img src="images/teaserfig.png" alt="Teaser Figure" width="600"/>
 </p>
