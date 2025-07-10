@@ -16,7 +16,7 @@
 
 ## 🧠 Overview
 
-**VIP‑Sim** is a symptom-based, Unity-powered desktop overlay simulator that accurately visualizes visual impairments based on real user input. Built through a **participatory design process** with **7 visually impaired participants**, VIP‑Sim applies customizable shaders over any Windows/macOS design tool, simulating over **20 impairments** in a **gaze-contingent** manner.
+**VIP‑Sim** is a symptom-based, Unity-powered desktop overlay simulator that accurately visualizes visual impairments based on real user input. Built through a **participatory design process** with **7 visually impaired participants (VIP)**, VIP‑Sim applies customizable shaders over any Windows/macOS design tool, simulating over **20 impairments** in a **gaze-contingent** manner.
 
 People with vision impairments (VIPs) often rely on their remaining vision when interacting with user interfaces. Simulating visual impairments has proven to be an effective tool for designers, fostering awareness of the challenges faced by VIPs.
 While previous research has introduced various vision impairment simulators, none have yet been developed with the direct involvement of VIPs or thoroughly evaluated from their perspective.
@@ -107,7 +107,6 @@ We welcome bug reports, shader improvements, and new symptom contributions!
 # 📝 Citation
 If you use VIP-Sim in academic work, please cite:
 
-TODO
 ```
 @inproceedings{Raedler2025VIPSIM,
   title     = {{VIP-Sim: A User-Centered Approach to Vision Impairment Simulation for Accessible Design}},
