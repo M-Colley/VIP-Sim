@@ -50,13 +50,8 @@ If you want to use our shaders for your own project or use/contribute to VIP-Sim
 
 ### 🚀 Quick Start
 
-First select the window or application you want to simulate over (e.g., Adobe XD)!
-
-Toggle symptoms using the side panel
-
-Adjust parameters (e.g., size, blur, sensitivity) as needed
-
-Enable gaze tracking (or switch to mouse-based fallback)
+Download our release to to install VIP-Sim to your system.
+Note that the Mac-OS version does need a manual adjustement to the access rights for screen recording.
 
 ### 🎓 Tutorial
 
