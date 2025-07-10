@@ -1,0 +1,4 @@
+<linker>
+    <assembly fullname="System.Windows.Forms" preserve="none"/>
+    <assembly fullname="Mono.Posix" preserve="none"/>
+</linker>
