@@ -50,7 +50,7 @@ If you want to use our shaders for your own project or use/contribute to VIP-Sim
 
 ### 🚀 Quick Start
 
-Select the window or application you want to simulate over (e.g., Adobe XD)
+First select the window or application you want to simulate over (e.g., Adobe XD)!
 
 Toggle symptoms using the side panel
 
@@ -96,6 +96,8 @@ Simulating specific user diagnoses
 | Foveal Darkness            | ✅ Yes                | Size, Fade, Opacity (each 0–1)                                            |
 | Flickering Stars           | ❌ No                 | Radius, Fade                                                              |
 | Detail Loss                | ❌ No                 | Severity via number of clusters (10 to 1000)                              |
+
+Example shader settings of our participants:
 
 <p align="center">
   <img src="images/participants.png" alt="Teaser Figure" width="600"/>
