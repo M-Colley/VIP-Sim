@@ -33,6 +33,8 @@ public class GazeTracker : MonoBehaviour
 
     // Cache reference to the Gaze component instead of searching every frame
     private Gaze gazeScript;
+    // Cache the active state of the unitEye object
+    private bool unitEyeActive = false;
 
     // Singleton
     private static GazeTracker instance; // Singleton instance
@@ -70,7 +72,7 @@ public class GazeTracker : MonoBehaviour
 	void Update ()
     {
         switch (gazeSource) {
-		case GazeSource.Fove:
+                case GazeSource.Fove:
                 /*
         	// Get convergence data
 			Fove.Managed.SFVR_GazeConvergenceData convergence = FoveInterface2.GetFVRHeadset ().GetGazeConvergence ();
@@ -88,7 +90,11 @@ public class GazeTracker : MonoBehaviour
 			break;
             */
         case GazeSource.UnitEye:
-                unitEye.SetActive(true);
+                if (!unitEyeActive)
+                {
+                    unitEye.SetActive(true);
+                    unitEyeActive = true;
+                }
                 xy_norm = FindGazeLocation();
                 xy_norm.x = xy_norm.x / Screen.width;
                 xy_norm.y = (Screen.height - xy_norm.y) / Screen.height;
@@ -125,10 +131,14 @@ public class GazeTracker : MonoBehaviour
                 */
                 break;
         case GazeSource.Mouse:
-            unitEye.SetActive(false);
-         	// Get raw, clip within canvas
-			float mousex = Mathf.Min (Mathf.Max (Input.mousePosition.x, 0), Screen.width);
-			float mousey = Mathf.Min (Mathf.Max (Input.mousePosition.y, 0), Screen.height);
+            if (unitEyeActive)
+            {
+                unitEye.SetActive(false);
+                unitEyeActive = false;
+            }
+                // Get raw, clip within canvas
+                        float mousex = Mathf.Min (Mathf.Max (Input.mousePosition.x, 0), Screen.width);
+                        float mousey = Mathf.Min (Mathf.Max (Input.mousePosition.y, 0), Screen.height);
 
             // Convert to norm & set
 			xy_norm.x = mousex / Screen.width;
@@ -138,20 +148,26 @@ public class GazeTracker : MonoBehaviour
 
             // finished Mouse
             break;
-		case GazeSource.None:
-         	// fix at centre
-			xy_norm.x = 0.5f;
-			xy_norm.y = 0.5f;
+                case GazeSource.None:
+                // fix at centre
+                        xy_norm.x = 0.5f;
+                        xy_norm.y = 0.5f;
 
-         	// finished None
-			break;
-		default:
-			throw new System.ArgumentException ("Unknown GazeSource parameter?");
-		}
+                if (unitEyeActive)
+                {
+                    unitEye.SetActive(false);
+                    unitEyeActive = false;
+                }
+
+                // finished None
+                        break;
+                default:
+                        throw new System.ArgumentException ("Unknown GazeSource parameter?");
+                }
 
         // clamp within 0 to 1 range (defensive)
-        xy_norm.x = Mathf.Min(Mathf.Max(xy_norm.x, 0f), 1f);
-        xy_norm.y = Mathf.Min(Mathf.Max(xy_norm.y, 0f), 1f);
+        xy_norm.x = Mathf.Clamp01(xy_norm.x);
+        xy_norm.y = Mathf.Clamp01(xy_norm.y);
     }
 
     void OnGUI()
