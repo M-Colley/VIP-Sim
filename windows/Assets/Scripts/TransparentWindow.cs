@@ -75,6 +75,9 @@ public class TransparentWindow : MonoBehaviour {
 #endif
 
         Application.runInBackground = true;
+        // Lower the frame rate when running in the background to reduce CPU usage
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
     }
 
     public void enableFeedbackState()
@@ -133,31 +136,9 @@ public class TransparentWindow : MonoBehaviour {
     public bool IsCoordinateOutsidePanel()
     {
         Vector2 screenPosition = Input.mousePosition;
-        // Convert screen position to canvas space
-        Vector2 canvasPosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPosition, null, out canvasPosition);
-
-
-        // Get the panel's boundaries in canvas space
-        Vector3[] panelCorners = new Vector3[4];
-        panelRectTransform.GetWorldCorners(panelCorners);
-
-        // Convert the world coordinates of the panel corners to local canvas space
-        for (int i = 0; i < 4; i++)
-        {
-            
-            panelCorners[i] = canvasRectTransform.InverseTransformPoint(panelCorners[i]);
-        }
-
-        // Check if the point is inside the panel
-        if (canvasPosition.x >= panelCorners[0].x && canvasPosition.x <= panelCorners[2].x &&
-            canvasPosition.y >= panelCorners[0].y && canvasPosition.y <= panelCorners[2].y)
-        {
-            return false; // Inside the panel
-        }
-        else
-        {
-            return true; // Outside the panel
-        }
+        // Use the built-in rectangle check to avoid per-frame allocations
+        bool inside = RectTransformUtility.RectangleContainsScreenPoint(
+            panelRectTransform, screenPosition, null);
+        return !inside;
     }
 }
