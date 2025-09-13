@@ -22492,7 +22492,7 @@ MonoBehaviour:
     i_threshold: 0
     displacementAmount: 0
     vortexRadius: 0
-    suctionStrenght: 0
+    suctionStrength: 0
     innerCircleRadius: 0
     noiseAmount: 0
     innnerCircleRadius: 0
