@@ -15,6 +15,9 @@ public class MarkerTool : MonoBehaviour
     private List<GameObject> drawnObjects = new List<GameObject>();
     private bool activeState = true;
 
+    [SerializeField]
+    private float pointDistanceThreshold = 0.01f;
+
     private Material currentMaterial;
 
     private void Start()
@@ -59,6 +62,8 @@ public class MarkerTool : MonoBehaviour
 
         currentLineRenderer.SetPosition(0, mousePos);
         currentLineRenderer.SetPosition(1, mousePos);
+
+        lastPos = mousePos;
     }
 
     void AddAPoint(Vector2 pointPos)
@@ -71,7 +76,7 @@ public class MarkerTool : MonoBehaviour
     void PointToMousePos()
     {
         Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
-        if (lastPos != mousePos)
+        if (Vector2.Distance(lastPos, mousePos) > pointDistanceThreshold)
         {
             AddAPoint(mousePos);
             lastPos = mousePos;
