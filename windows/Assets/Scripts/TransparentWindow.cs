@@ -59,6 +59,7 @@ public class TransparentWindow : MonoBehaviour {
 
     private IntPtr hWnd;
     private bool _lastClickthrough;
+    private Coroutine clickRoutine;
 
     private void Start() {
         //MessageBox(new IntPtr(0), "Hello World!", "Hello Dialog", 0);
@@ -92,17 +93,36 @@ public class TransparentWindow : MonoBehaviour {
         feedbackState = false;
     }
 
-    private void Update() {
-        //SetClickthrough(Physics2D.OverlapPoint(GetMouseWorldPosition()) == null);
-        bool clickthrough = IsCoordinateOutsidePanel();
-        if (feedbackState)
+    private void OnEnable()
+    {
+        // Run the clickthrough check at a reduced frequency to lower CPU usage
+        clickRoutine = StartCoroutine(ClickthroughRoutine());
+    }
+
+    private void OnDisable()
+    {
+        if (clickRoutine != null)
         {
-            clickthrough = false;
+            StopCoroutine(clickRoutine);
         }
-        if (clickthrough != _lastClickthrough)
+    }
+
+    private IEnumerator ClickthroughRoutine()
+    {
+        var wait = new WaitForSeconds(0.1f); // Check 10 times per second
+        while (true)
         {
-            SetClickthrough(clickthrough);
-            _lastClickthrough = clickthrough;
+            bool clickthrough = IsCoordinateOutsidePanel();
+            if (feedbackState)
+            {
+                clickthrough = false;
+            }
+            if (clickthrough != _lastClickthrough)
+            {
+                SetClickthrough(clickthrough);
+                _lastClickthrough = clickthrough;
+            }
+            yield return wait;
         }
     }
 
