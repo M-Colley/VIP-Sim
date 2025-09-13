@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class MarkerTool : MonoBehaviour
 {
     public Camera m_camera;
-    public GameObject brush;
+    public BrushPool brushPool;
 
     public Material white;
     public Material blue;
@@ -48,7 +48,7 @@ public class MarkerTool : MonoBehaviour
 
     void CreateBrush()
     {
-        GameObject brushInstance = Instantiate(brush);
+        GameObject brushInstance = brushPool.GetBrush();
         brushInstance.GetComponent<LineRenderer>().material = currentMaterial;
         drawnObjects.Add(brushInstance);
         brushInstance.transform.parent = transform;
@@ -116,7 +116,7 @@ public class MarkerTool : MonoBehaviour
         {
             GameObject lastDrawnObject = drawnObjects[drawnObjects.Count - 1];
             drawnObjects.RemoveAt(drawnObjects.Count - 1);
-            Destroy(lastDrawnObject);
+            brushPool.ReturnBrush(lastDrawnObject);
         }
     }
 
