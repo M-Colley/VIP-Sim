@@ -69,8 +69,10 @@ public class GazeTracker : MonoBehaviour
     }
 
 	// Update is called once per frame
-	void Update ()
+        void Update ()
     {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
         switch (gazeSource) {
                 case GazeSource.Fove:
                 /*
@@ -96,8 +98,8 @@ public class GazeTracker : MonoBehaviour
                     unitEyeActive = true;
                 }
                 xy_norm = FindGazeLocation();
-                xy_norm.x = xy_norm.x / Screen.width;
-                xy_norm.y = (Screen.height - xy_norm.y) / Screen.height;
+                xy_norm.x = xy_norm.x / screenWidth;
+                xy_norm.y = (screenHeight - xy_norm.y) / screenHeight;
             //get latest data from Tobii Eye-Tracker
                 /*
                 var latestdata = TobiiXR.GetEyeTrackingData(TobiiXR_TrackingSpace.Local);
@@ -116,8 +118,7 @@ public class GazeTracker : MonoBehaviour
                 }
                     // only register large movements
                     float dist = Mathf.Sqrt(Mathf.Pow(xy_norm.x - prevX, 2) + Mathf.Pow(xy_norm.y - prevY, 2));
-                    //if (dist > 0.01)
-                    if (dist > -0.01)
+                    if (dist > 0.01f)
                     {
                         prevX = xy_norm.x;
                         prevY = xy_norm.y;
@@ -137,12 +138,12 @@ public class GazeTracker : MonoBehaviour
                 unitEyeActive = false;
             }
                 // Get raw, clip within canvas
-                        float mousex = Mathf.Min (Mathf.Max (Input.mousePosition.x, 0), Screen.width);
-                        float mousey = Mathf.Min (Mathf.Max (Input.mousePosition.y, 0), Screen.height);
+                        float mousex = Mathf.Min (Mathf.Max (Input.mousePosition.x, 0), screenWidth);
+                        float mousey = Mathf.Min (Mathf.Max (Input.mousePosition.y, 0), screenHeight);
 
             // Convert to norm & set
-			xy_norm.x = mousex / Screen.width;
-			xy_norm.y = mousey / Screen.height;
+                        xy_norm.x = mousex / screenWidth;
+                        xy_norm.y = mousey / screenHeight;
 
             //Debug.Log("Mouse --> " + xy_norm);
 
@@ -173,11 +174,13 @@ public class GazeTracker : MonoBehaviour
     void OnGUI()
     {
         if (visualiseGaze)
-        { 
-            float xMin = (Screen.width / 2)*xy_norm.x - (crosshairImage.width / 2);
-            float yMin = Screen.height*(1-xy_norm.y) - (crosshairImage.height / 2);
+        {
+            float screenWidth = Screen.width;
+            float screenHeight = Screen.height;
+            float xMin = (screenWidth / 2)*xy_norm.x - (crosshairImage.width / 2);
+            float yMin = screenHeight*(1-xy_norm.y) - (crosshairImage.height / 2);
             GUI.DrawTexture(new Rect(xMin, yMin, crosshairImage.width, crosshairImage.height), crosshairImage);
-            GUI.DrawTexture(new Rect(xMin + (Screen.width / 2), yMin, crosshairImage.width, crosshairImage.height), crosshairImage);
+            GUI.DrawTexture(new Rect(xMin + (screenWidth / 2), yMin, crosshairImage.width, crosshairImage.height), crosshairImage);
         }
     }
 
