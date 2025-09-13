@@ -29,7 +29,7 @@ public class MarkerTool : MonoBehaviour
     {
         Drawing();
         CheckUndo();
-        CheckVisablility();
+        CheckVisibility();
         CheckColor();
     }
 
@@ -107,11 +107,11 @@ public class MarkerTool : MonoBehaviour
         }
     }
 
-    void CheckVisablility()
+    void CheckVisibility()
     {
         if (Input.GetKeyDown(KeyCode.V)) //USD or European layout
         {
-            toggleLineVisablity();
+            ToggleLineVisibility();
         }
     }
 
@@ -125,7 +125,7 @@ public class MarkerTool : MonoBehaviour
         }
     }
 
-    public void toggleLineVisablity()
+    public void ToggleLineVisibility()
     {
         activeState = !activeState;
         foreach (GameObject lineObj in drawnObjects)
