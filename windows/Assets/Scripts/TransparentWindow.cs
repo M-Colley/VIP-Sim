@@ -58,6 +58,7 @@ public class TransparentWindow : MonoBehaviour {
     const uint LWA_COLORKEY = 0x00000000;
 
     private IntPtr hWnd;
+    private bool _lastClickthrough;
 
     private void Start() {
         //MessageBox(new IntPtr(0), "Hello World!", "Hello Dialog", 0);
@@ -68,12 +69,13 @@ public class TransparentWindow : MonoBehaviour {
         MARGINS margins = new MARGINS { cxLeftWidth = -1 };
         DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
-        SetWindowLong(hWnd, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT);
+        SetClickthrough(true);
         //SetLayeredWindowAttributes(hWnd, 0, 0, LWA_COLORKEY);
-
         SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
+        _lastClickthrough = true;
+#else
+        _lastClickthrough = false;
 #endif
-
         Application.runInBackground = true;
         // Lower the frame rate when running in the background to reduce CPU usage
         QualitySettings.vSyncCount = 0;
@@ -97,9 +99,11 @@ public class TransparentWindow : MonoBehaviour {
         {
             clickthrough = false;
         }
-        SetClickthrough(clickthrough);
-
-
+        if (clickthrough != _lastClickthrough)
+        {
+            SetClickthrough(clickthrough);
+            _lastClickthrough = clickthrough;
+        }
     }
 
     private void SetClickthrough(bool clickthrough) {
