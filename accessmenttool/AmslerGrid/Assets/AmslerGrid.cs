@@ -51,7 +51,7 @@ public class AmslerGrid : MonoBehaviour
 
     private void Update()
     {
-        CheckVisablility();
+        CheckVisibility();
     }
 
     float ParseAspectRatio(string aspectRatio)
@@ -158,15 +158,15 @@ public class AmslerGrid : MonoBehaviour
         drawnObjects.Add(gridObj);
     }
 
-    void CheckVisablility()
+    void CheckVisibility()
     {
         if (Input.GetKeyDown(KeyCode.V)) //USD or European layout
         {
-            toggleLineVisablity();
+            ToggleLineVisibility();
         }
     }
 
-    public void toggleLineVisablity()
+    public void ToggleLineVisibility()
     {
         activeState = !activeState;
         foreach (GameObject lineObj in drawnObjects)
