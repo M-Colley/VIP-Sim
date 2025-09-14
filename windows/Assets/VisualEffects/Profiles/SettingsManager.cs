@@ -122,12 +122,8 @@ public class SettingsManager : MonoBehaviour
     // Übernimmt die geladenen Einstellungen und aktualisiert alle relevanten Public Variablen in anderen Skripten
     private void ApplySettings()
     {
-        // Aktualisiere alle Objekte mit Public Variablen
-        MonoBehaviour[] allBehaviours = FindObjectsOfType<MonoBehaviour>();
-        foreach (var behaviour in allBehaviours)
-        {
-            UpdatePublicFields();
-        }
+        // Aktualisiere die referenzierten Objekte mit Public Variablen
+        UpdatePublicFields();
 
         // Beispiel: wende Licht-Intensität an
         Light[] lights = FindObjectsOfType<Light>();
