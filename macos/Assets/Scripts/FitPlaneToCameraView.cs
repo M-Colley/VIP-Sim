@@ -3,52 +3,126 @@ using UnityEngine;
 public class FitPlaneToCameraView : MonoBehaviour
 {
     public Camera mainCamera; // Reference to the main camera
+
     private Transform planeTransform; // Reference to the plane's transform
+    private MeshRenderer planeRenderer;
+
+    private Vector3 lastCameraPosition;
+    private Quaternion lastCameraRotation;
+    private float lastCameraFieldOfView;
+    private float lastCameraAspect;
+    private int lastScreenWidth;
+    private int lastScreenHeight;
+    private Vector3 lastPlaneScale;
+    private Vector3 lastPlanePosition;
+    private int lastChildCount;
+    private bool hasValidSetup;
 
     void Start()
     {
-        planeTransform = GetFirstChildTransform();
+        InitialisePlane(true);
+        CacheState();
+        UpdatePlaneIfNeeded(true);
+    }
+
+    void LateUpdate()
+    {
+        UpdatePlaneIfNeeded();
+    }
+
+    private void UpdatePlaneIfNeeded(bool forceUpdate = false)
+    {
+        if (!hasValidSetup || transform.childCount != lastChildCount)
+        {
+            InitialisePlane(false);
+            if (!hasValidSetup)
+            {
+                return;
+            }
+            forceUpdate = true;
+        }
+
+        bool cameraChanged = mainCamera.transform.position != lastCameraPosition ||
+                             mainCamera.transform.rotation != lastCameraRotation ||
+                             !Mathf.Approximately(mainCamera.fieldOfView, lastCameraFieldOfView) ||
+                             !Mathf.Approximately(mainCamera.aspect, lastCameraAspect);
+
+        bool screenChanged = Screen.width != lastScreenWidth || Screen.height != lastScreenHeight;
+
+        bool planeChanged = planeTransform.hasChanged ||
+                            planeTransform.position != lastPlanePosition ||
+                            planeTransform.lossyScale != lastPlaneScale ||
+                            transform.childCount != lastChildCount;
+
+        if (forceUpdate || cameraChanged || planeChanged || screenChanged)
+        {
+            FitPlane();
+            CacheState();
+        }
+    }
+
+    private void InitialisePlane(bool logErrors)
+    {
+        planeTransform = transform.childCount > 0 ? transform.GetChild(0) : null;
+        lastChildCount = transform.childCount;
+
         if (planeTransform == null)
         {
-            Debug.LogError("No child found in the parent object.");
-        }
-    }
-
-    void Update()
-    {
-        planeTransform = GetFirstChildTransform();
-        if (planeTransform != null)
-        {
-            Debug.Log("Fit plane");
-            FitPlane();
-        }
-    }
-
-    Transform GetFirstChildTransform()
-    {
-        if (transform.childCount > 0)
-        {
-            return transform.GetChild(0);
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    void FitPlane()
-    {
-        if (mainCamera == null || planeTransform == null)
-        {
-            Debug.LogError("Main camera or plane transform not assigned.");
+            hasValidSetup = false;
+            if (logErrors)
+            {
+                Debug.LogError("FitPlaneToCameraView requires the parent to have at least one child containing the plane.");
+            }
             return;
         }
 
-        // Get the mesh bounds of the plane
-        MeshRenderer planeRenderer = planeTransform.GetComponent<MeshRenderer>();
+        planeRenderer = planeTransform.GetComponent<MeshRenderer>();
         if (planeRenderer == null)
         {
-            Debug.LogError("Plane does not have a MeshRenderer component.");
+            hasValidSetup = false;
+            if (logErrors)
+            {
+                Debug.LogError("Plane does not have a MeshRenderer component.");
+            }
+            return;
+        }
+
+        if (mainCamera == null)
+        {
+            hasValidSetup = false;
+            if (logErrors)
+            {
+                Debug.LogError("Main camera is not assigned in FitPlaneToCameraView.");
+            }
+            return;
+        }
+
+        hasValidSetup = true;
+    }
+
+    private void CacheState()
+    {
+        if (!hasValidSetup)
+        {
+            return;
+        }
+
+        lastCameraPosition = mainCamera.transform.position;
+        lastCameraRotation = mainCamera.transform.rotation;
+        lastCameraFieldOfView = mainCamera.fieldOfView;
+        lastCameraAspect = mainCamera.aspect;
+        lastScreenWidth = Screen.width;
+        lastScreenHeight = Screen.height;
+        lastPlaneScale = planeTransform.lossyScale;
+        lastPlanePosition = planeTransform.position;
+        lastChildCount = transform.childCount;
+        planeTransform.hasChanged = false;
+    }
+
+    private void FitPlane()
+    {
+        if (!hasValidSetup)
+        {
             return;
         }
 
@@ -56,21 +130,13 @@ public class FitPlaneToCameraView : MonoBehaviour
         float planeHeight = planeBounds.size.y;
         float planeWidth = planeBounds.size.x;
 
-        // Get the frustum height at the distance of the plane from the camera
-        float frustumHeight = 2.0f * Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-        float frustumWidth = frustumHeight * mainCamera.aspect;
-
-        // Calculate the required distance from the camera to fit the plane
-        float requiredDistanceHeight = planeHeight / (2.0f * Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad));
-        float requiredDistanceWidth = planeWidth / (2.0f * Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) / mainCamera.aspect);
+        float halfFovRadians = mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad;
+        float tanHalfFov = Mathf.Tan(halfFovRadians);
+        float requiredDistanceHeight = planeHeight / (2.0f * tanHalfFov);
+        float requiredDistanceWidth = planeWidth / (2.0f * tanHalfFov / mainCamera.aspect);
         float requiredDistance = Mathf.Max(requiredDistanceHeight, requiredDistanceWidth);
 
-        // Set the parent's position
-        //Vector3 direction = (planeTransform.position - mainCamera.transform.position).normalized;
-        Vector3 direction = new Vector3(0, 0, 1);
+        Vector3 direction = Vector3.forward;
         transform.position = mainCamera.transform.position + direction * requiredDistance;
-
-        // Correct the plane position to keep the parent-child relationship
-        //planeTransform.localPosition = Vector3.zero;
     }
 }
